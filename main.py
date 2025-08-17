@@ -1,10 +1,20 @@
-from aiogram import Bot, Dispatcher, executor, types
+from aiogram import Bot, Dispatcher, types
+from aiogram.utils import executor
+import os
 
-bot = Bot('7828928358:AAEl0_jrNjaJPlPiAmha4RIJAXaE0i3N4EY')
+# Токен можно хранить в переменной окружения
+TOKEN = os.getenv("BOT_TOKEN", "YOUR_TOKEN_HERE")
+
+bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
+
+@dp.message_handler(commands=['start'])
+async def start(message: types.Message):
+    await message.reply("Привет! Я простой бот на aiogram 🤖")
 
 @dp.message_handler()
 async def echo(message: types.Message):
-    await message.answer("Привет")
+    await message.reply(f"Ты написал: {message.text}")
 
-executor.start_polling(dp)
+if __name__ == '__main__':
+    executor.start_polling(dp, skip_updates=True)
